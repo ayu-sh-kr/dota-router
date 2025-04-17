@@ -1,0 +1,40 @@
+{
+  "name": "@ayu-sh-kr/dota-router",
+  "author": "ayu-sh-kr",
+  "license": "MIT",
+  "version": "0.0.0",
+  "description": "Dota Router is a simple and lightweight router for `dota-core` web component api.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "lint": "tsc --noEmit",
+    "build-pack": "pnpm build && pnpm pack",
+    "release": "pnpm run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.2",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/dom-navigation": "^1.0.5",
+    "@types/node": "^22.14.1",
+    "@types/web": "^0.0.219",
+    "rollup": "^4.40.0",
+    "rollup-plugin-dts": "^6.2.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@ayu-sh-kr/dota-core": "^1.6.14",
+    "reflect-metadata": "^0.2.2"
+  },
+  "private": false,
+  "keywords": [
+    "router",
+    "dota",
+    "dota-core",
+    "dota-router"
+  ]
+}
