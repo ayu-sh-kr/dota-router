@@ -17,7 +17,12 @@ const config = [
     ],
     plugins: [
       resolve(),
-      typescript({tsconfig: './tsconfig.json'}),
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: './dist',
+        declaration: false, // Let dts handle declarations instead
+        declarationDir: null // Don't create a separate 'types' directory
+      }),
     ],
   },
   {
