@@ -1,0 +1,12 @@
+node_modules
+.gitignore
+.github
+.changeset
+.idea
+test
+src
+tsconfig.json
+CHANGELOG.md
+pnpm-lock.yaml
+jest.config.ts
+.editorconfig
