@@ -8,6 +8,10 @@ import {BaseElement} from "@ayu-sh-kr/dota-core";
  */
 export interface RouterService<T extends BaseElement> {
 
+  readonly routes: RouteConfig<T>[];
+  readonly errorRoute: RouteConfig<T>;
+  readonly defaultRoute: RouteConfig<T>;
+
   /**
    * Initialize the router and set up event listeners for navigation events.
    * This method is called when the router is created.
