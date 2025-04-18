@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.4
+
+### Patch Changes
+
+- 3370271: Fix infinite recursion during route search
+
 ## 0.0.3
 
 ### Patch Changes
