@@ -1,3 +1,8 @@
+import {RenderConfig, RouteConfig, RouterService} from "@dota/Types";
+import {BaseElement, ComponentConfig} from "@ayu-sh-kr/dota-core";
+import 'reflect-metadata';
+import {DomNavigationRouter} from "@dota/dom-navigation.router";
+
 export class RouterUtils {
 
   /**
@@ -30,6 +35,100 @@ export class RouterUtils {
       return new URL(entries[entries.length - 1].url || '').pathname;
     }
     return '';
+  }
+
+  /**
+   * Get the child path from the given path and route configuration.
+   * This method extracts the child path from the given path based on the route configuration.
+   * It checks if the path starts with the route's path and returns the remaining part of the path.
+   *
+   * @param path - The path to extract the child path from.
+   * @param route - The route configuration to check against.
+   * @returns The child path as a string or '/' if not found.
+   */
+  static getChildPath<T extends BaseElement>(path: string, route: RouteConfig<T>) {
+    return path.substring(route.path.length) || '/';
+  }
+
+  /**
+   * Find a route configuration based on the given path.
+   * This method searches for an exact match first, and if not found, it checks for partial matches.
+   * If a match is found, it returns the corresponding route configuration.
+   *
+   * @param path - The path to search for.
+   * @param routes - The array of route configurations to search in.
+   * @returns The matching route configuration or undefined if no match is found.
+   */
+  static findRoute<T extends BaseElement>(path: string, routes: RouteConfig<T>[]): RouteConfig<T> | undefined {
+    console.info(`Searching route for path: ${path}`);
+    // First, try to find an exact match
+    const exactMatch = routes.find(route => route.path === path);
+    if (exactMatch && exactMatch.render) return exactMatch
+    else if (exactMatch) return RouterUtils.findRoute(RouterUtils.getChildPath(path, exactMatch), routes);
+
+    for (const route of routes) {
+      if (path.startsWith(route.path) && route.children && route.children.length > 0) {
+        if (route.render) {
+          return route;
+        }
+        const childPath = RouterUtils.getChildPath(path, route);
+        const childRoute = RouterUtils.findRoute(childPath, route.children);
+
+        if (childRoute) {
+          return childRoute;
+        }
+
+        return route;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Render the component based on the current path and route configuration.
+   * This method is responsible for rendering the appropriate component based on the current path.
+   * It checks if the route has a custom render function or if it has a component associated with it.
+   * If a component is found, it renders it in the app root element.
+   *
+   * @param config - The configuration object containing the path, routes, options, and router instance.
+   * @returns void
+   */
+  static render<T extends BaseElement>(config: RenderConfig<T>): void {
+    const {path, routes, options} = config;
+    const router = config.router as RouterService<T>;
+    if (path === '/error') {
+      if (Reflect.hasOwnMetadata('Component', router.errorRoute.component)) {
+        const config: ComponentConfig = Reflect.getOwnMetadata('Component', router.errorRoute.component);
+        const previousPath = RouterUtils.getPreviousPath();
+        document.querySelector('#app-root')!.innerHTML = `
+            <${config.selector} path="${previousPath}" message="${options?.message || 'Path not found'}"></${config.selector}>
+        `;
+        return;
+      }
+      console.error(`Error route component not found for path: ${path}`);
+    }
+
+    const route = RouterUtils.findRoute(path, routes);
+    if (!route) {
+      console.warn(`Route not found for path: ${path}`);
+      window.navigation.navigate('/error');
+      return;
+    }
+
+    if (route.render) {
+      console.info(`Rendering route with custom render function for path: ${path}`);
+      route.render(path);
+      return;
+    }
+
+    if (Reflect.hasOwnMetadata('Component', route.component)) {
+      const config: ComponentConfig = Reflect.getOwnMetadata('Component', route.component);
+      document.querySelector('#app-root')!.innerHTML = `<${config.selector} path="${path}"></${config.selector}>`;
+      return;
+    }
+
+    console.error(`Component not found for path: ${path}`);
   }
 
 }

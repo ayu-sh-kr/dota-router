@@ -8,6 +8,10 @@ import {BaseElement} from "@ayu-sh-kr/dota-core";
  */
 export interface RouterService<T extends BaseElement> {
 
+  readonly routes: RouteConfig<T>[];
+  readonly errorRoute: RouteConfig<T>;
+  readonly defaultRoute: RouteConfig<T>;
+
   /**
    * Initialize the router and set up event listeners for navigation events.
    * This method is called when the router is created.
@@ -17,17 +21,6 @@ export interface RouterService<T extends BaseElement> {
    * @returns void
    */
   init(): void;
-
-  /**
-   * Render the component based on the current path and route configuration.
-   * This method is responsible for rendering the appropriate component based on the current path.
-   * It checks if the route has a custom render function or if it has a component associated with it.
-   * If a component is found, it renders it in the app root element.
-   *
-   * @param config - The configuration object containing the path, routes, options, and router instance.
-   * @returns void
-   */
-  render(config: RenderConfig<T>): void;
 }
 
 export type RouteConfig<T extends BaseElement> = {

@@ -10,3 +10,4 @@ CHANGELOG.md
 pnpm-lock.yaml
 jest.config.ts
 .editorconfig
+rollup.config.mjs

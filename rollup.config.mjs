@@ -15,6 +15,7 @@ const config = [
         format: 'es',
       },
     ],
+    external: ['reflect-metadata'],
     plugins: [
       resolve(),
       typescript({
