@@ -71,6 +71,6 @@ export class DomNavigationRouter<T extends BaseElement> implements RouterService
     };
 
     // Trigger navigation using the Navigation API
-    window.navigation.navigate(path);
+    window.navigation.navigate(navigationDestination.url);
   }
 }
