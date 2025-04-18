@@ -65,16 +65,15 @@ export class DomNavigationRouter<T extends BaseElement> implements RouterService
     console.info(`Searching route for path: ${path}`);
     // First, try to find an exact match
     const exactMatch = routes.find(route => route.path === path);
-    if (exactMatch) {
-      return exactMatch;
-    }
+    if (exactMatch && exactMatch.render) return exactMatch
+    else if (exactMatch) return DomNavigationRouter.findRoute(RouterUtils.getChildPath(path, exactMatch), routes);
 
     for (const route of routes) {
       if (path.startsWith(route.path) && route.children && route.children.length > 0) {
         if (route.render) {
           return route;
         }
-        const childPath = path.substring(route.path.length) || '/';
+        const childPath = RouterUtils.getChildPath(path, route);
         const childRoute = DomNavigationRouter.findRoute(childPath, route.children);
 
         if (childRoute) {
