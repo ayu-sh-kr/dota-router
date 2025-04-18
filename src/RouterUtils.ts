@@ -1,4 +1,4 @@
-import {RenderConfig, RouteConfig} from "@dota/Types";
+import {RenderConfig, RouteConfig, RouterService} from "@dota/Types";
 import {BaseElement, ComponentConfig} from "@ayu-sh-kr/dota-core";
 import 'reflect-metadata';
 import {DomNavigationRouter} from "@dota/dom-navigation.router";
@@ -96,7 +96,7 @@ export class RouterUtils {
    */
   static render<T extends BaseElement>(config: RenderConfig<T>): void {
     const {path, routes, options} = config;
-    const router = config.router as DomNavigationRouter<T>;
+    const router = config.router as RouterService<T>;
     if (path === '/error') {
       if (Reflect.hasOwnMetadata('Component', router.errorRoute.component)) {
         const config: ComponentConfig = Reflect.getOwnMetadata('Component', router.errorRoute.component);
