@@ -64,7 +64,9 @@ export class RouterUtils {
     // First, try to find an exact match
     const exactMatch = routes.find(route => route.path === path);
     if (exactMatch && exactMatch.render) return exactMatch
-    else if (exactMatch) return RouterUtils.findRoute(RouterUtils.getChildPath(path, exactMatch), routes);
+    else if (exactMatch && exactMatch.children && exactMatch.children.length > 0) {
+      return RouterUtils.findRoute(RouterUtils.getChildPath(path, exactMatch), routes);
+    } else if(exactMatch) return exactMatch;
 
     for (const route of routes) {
       if (path.startsWith(route.path) && route.children && route.children.length > 0) {
