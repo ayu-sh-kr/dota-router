@@ -15,17 +15,31 @@ const config = [
         format: 'es',
       },
     ],
-    external: ['reflect-metadata'],
+    external: ['reflect-metadata', '@ayu-sh-kr/dota-core'],
     plugins: [
       resolve(),
-      typescript({tsconfig: './tsconfig.json'}),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false,
+      }),
     ],
   },
   {
-    // Bundle declaration files
     input: 'src/index.ts',
-    output: [{file: 'dist/index.d.ts', format: 'es'}],
-    plugins: [dts()],
+    output: {
+      file: 'dist/index.d.ts',
+      format: 'es',
+    },
+    plugins: [
+      dts({
+        respectExternal: true,
+        compilerOptions: {
+          preserveSymlinks: false,
+          paths: { "@dota/*": ["./src/*"] },
+          baseUrl: "."
+        }
+      })
+    ],
   },
 ];
 
