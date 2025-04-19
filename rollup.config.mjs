@@ -18,12 +18,7 @@ const config = [
     external: ['reflect-metadata'],
     plugins: [
       resolve(),
-      typescript({
-        tsconfig: './tsconfig.json',
-        outDir: './dist',
-        declaration: false, // Let dts handle declarations instead
-        declarationDir: null // Don't create a separate 'types' directory
-      }),
+      typescript({tsconfig: './tsconfig.json'}),
     ],
   },
   {
