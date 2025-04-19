@@ -1,7 +1,8 @@
-import {RenderConfig, RouteConfig, RouterService} from "@dota/Types";
+import {NavigationOption, RenderConfig, RouteConfig, RouterService} from "@dota/Types";
 import {BaseElement, ComponentConfig} from "@ayu-sh-kr/dota-core";
 import 'reflect-metadata';
 import {DomNavigationRouter} from "@dota/dom-navigation.router";
+import {DomHistoryRouter} from "@dota/dom-history.router";
 
 export class RouterUtils {
 
@@ -114,7 +115,7 @@ export class RouterUtils {
     const route = RouterUtils.findRoute(path, routes);
     if (!route) {
       console.warn(`Route not found for path: ${path}`);
-      window.navigation.navigate('/error');
+      RouterUtils.route(router, '/error', {message: 'Path not found'});
       return;
     }
 
@@ -133,4 +134,23 @@ export class RouterUtils {
     console.error(`Component not found for path: ${path}`);
   }
 
+  static route(router: RouterService<BaseElement>, path: string, options?: NavigationOption) {
+    // Make sure path starts with a slash
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+    switch (router.constructor.name) {
+      case 'DomNavigationRouter': {
+        DomNavigationRouter.route(normalizedPath, options);
+        break;
+      }
+      case 'DomHistoryRouter': {
+        DomHistoryRouter.route(normalizedPath, options);
+        break;
+      }
+      default: {
+        console.error(`Router type ${router.constructor.name} not supported`);
+        break;
+      }
+    }
+  }
 }
