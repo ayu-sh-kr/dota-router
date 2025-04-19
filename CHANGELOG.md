@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.7
+
+### Patch Changes
+
+- 09000a8: Fix the navigation issue due to build minification
+
 ## 0.0.6
 
 ### Patch Changes
