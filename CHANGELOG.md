@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.6
+
+### Patch Changes
+
+- e318295: Fix type not declared issue with rollup build config
+
 ## 0.0.5
 
 ### Patch Changes
