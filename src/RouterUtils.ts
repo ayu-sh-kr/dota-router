@@ -134,23 +134,27 @@ export class RouterUtils {
     console.error(`Component not found for path: ${path}`);
   }
 
+  /**
+   * Navigate to a specific path using the provided router instance.
+   * This method uses the router instance to navigate to the specified path.
+   * It checks the type of router and calls the appropriate routing method.
+   *
+   * @param router - The router instance to use for navigation.
+   * @param path - The path to navigate to.
+   * @param options - Optional navigation options.
+   * @returns void
+   */
   static route(router: RouterService<BaseElement>, path: string, options?: NavigationOption) {
-    // Make sure path starts with a slash
+    // Normalize the path to ensure it starts with a slash
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
-    switch (router.constructor.name) {
-      case 'DomNavigationRouter': {
-        DomNavigationRouter.route(normalizedPath, options);
-        break;
-      }
-      case 'DomHistoryRouter': {
-        DomHistoryRouter.route(normalizedPath, options);
-        break;
-      }
-      default: {
-        console.error(`Router type ${router.constructor.name} not supported`);
-        break;
-      }
+    // Use instanceof operator to determine the router type
+    if (router instanceof DomNavigationRouter) {
+      DomNavigationRouter.route(normalizedPath, options);
+    } else if (router instanceof DomHistoryRouter) {
+      DomHistoryRouter.route(normalizedPath, options);
+    } else {
+      console.error(`Unsupported router type`);
     }
   }
 }
