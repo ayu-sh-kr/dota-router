@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.5
+
+### Patch Changes
+
+- 41a0bda: Fix type not generated issue
+
 ## 0.0.4
 
 ### Patch Changes
