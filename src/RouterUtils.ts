@@ -52,39 +52,78 @@ export class RouterUtils {
   }
 
   /**
-   * Find a route configuration based on the given path.
-   * This method searches for an exact match first, and if not found, it checks for partial matches.
-   * If a match is found, it returns the corresponding route configuration.
-   *
-   * @param path - The path to search for.
-   * @param routes - The array of route configurations to search in.
-   * @returns The matching route configuration or undefined if no match is found.
+   * Finds the most appropriate route configuration for a given path in a routing hierarchy.
+   * 
+   * @template T - Type parameter extending BaseElement to ensure type safety with route components
+   * @param path - The URL path to find a route for (e.g., "/users/profile")
+   * @param routes - Array of route configurations to search through
+   * @returns The matching RouteConfig or undefined if no match is found
+   * 
+   * @algorithm
+   * 1. Exact Match Phase:
+   *    - First attempts to find a route with a path exactly matching the requested path
+   *    - If an exact match is found: return it
+   * 
+   * 2. Prefix Match Phase (only executed if no exact match was found):
+   *    - For each route configuration:
+   *      a. Check if the request path starts with the route's path 
+   *      b. For routes with children:
+   *         - If route has a render function, return it immediately
+   *         - Calculate the remaining child path by removing the parent path 
+   *         - Recursively search for a matching child route
+   *         - Return matching child route if found, otherwise return the parent route
+   * 
+   * 3. Return undefined if no matches are found
+   * 
+   * @example
+   * With routes configuration:
+   * [
+   *   { path: "/dashboard", component: DashboardComponent },
+   *   { path: "/users", component: UsersComponent, children: [
+   *     { path: "/users/profile", component: ProfileComponent },
+   *     { path: "/users/settings", component: SettingsComponent }
+   *   ]}
+   * ]
+   * 
+   * // Simple exact match
+   * findRoute("/dashboard", routes) -> Returns DashboardComponent route
+   * 
+   * // Child route exact match
+   * findRoute("/users/profile", routes) -> Returns ProfileComponent route
+   * 
+   * // Non-existent path with valid parent prefix
+   * findRoute("/users/unknown", routes) -> May return UsersComponent as fallback
    */
   static findRoute<T extends BaseElement>(path: string, routes: RouteConfig<T>[]): RouteConfig<T> | undefined {
-    console.info(`Searching route for path: ${path}`);
-    // First, try to find an exact match
+    // Phase 1: Exact Match Phase
     const exactMatch = routes.find(route => route.path === path);
-    if (exactMatch && exactMatch.render) return exactMatch
-    else if (exactMatch && exactMatch.children && exactMatch.children.length > 0) {
-      return RouterUtils.findRoute(RouterUtils.getChildPath(path, exactMatch), exactMatch.children);
-    } else if(exactMatch) return exactMatch;
+    if (exactMatch) return exactMatch;
 
+    // Phase 2: Prefix Match Phase (only if no exact match was found)
     for (const route of routes) {
+      // Check if the path starts with this route's path and the route has children
       if (path.startsWith(route.path) && route.children && route.children.length > 0) {
+        // If the route has a render function, prioritize it
         if (route.render) {
           return route;
         }
+        
+        // Calculate the remaining path after removing the parent path
         const childPath = RouterUtils.getChildPath(path, route);
+        
+        // Recursively search for a matching child route
         const childRoute = RouterUtils.findRoute(childPath, route.children);
-
+        
+        // Return the child route if found, otherwise fall back to the parent route
         if (childRoute) {
           return childRoute;
         }
-
+        
         return route;
       }
     }
-
+    
+    // If no match found in either phase, return undefined
     return undefined;
   }
 
