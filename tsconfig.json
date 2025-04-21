@@ -13,9 +13,10 @@
     "lib": ["ES2020", "DOM"],
     /* Path */
     "paths": {
-      "@dota/*": ["./src/*"]
+      "@dota/*": ["./src/*"],
+      "@test/*": ["./test/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test"],
   "exclude": ["node_modules", "dist"]
 }
