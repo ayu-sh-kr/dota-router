@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.8
+
+### Patch Changes
+
+- 6d579c9: Fix routing issue with exact match and added tests
+
 ## 0.0.7
 
 ### Patch Changes
