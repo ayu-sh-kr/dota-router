@@ -1,5 +1,5 @@
 import {NavigationOption, RenderConfig, RouteConfig, RouterService} from "@dota/Types";
-import {BaseElement, ComponentConfig} from "@ayu-sh-kr/dota-core";
+import {ComponentConfig} from "@ayu-sh-kr/dota-core";
 import 'reflect-metadata';
 import {DomNavigationRouter} from "@dota/dom-navigation.router";
 import {DomHistoryRouter} from "@dota/dom-history.router";
@@ -47,7 +47,7 @@ export class RouterUtils {
    * @param route - The route configuration to check against.
    * @returns The child path as a string or '/' if not found.
    */
-  static getChildPath<T extends BaseElement>(path: string, route: RouteConfig<T>) {
+  static getChildPath<T extends HTMLElement>(path: string, route: RouteConfig<T>) {
     return path.substring(route.path.length) || '/';
   }
 
@@ -94,7 +94,7 @@ export class RouterUtils {
    * // Non-existent path with valid parent prefix
    * findRoute("/users/unknown", routes) -> May return UsersComponent as fallback
    */
-  static findRoute<T extends BaseElement>(path: string, routes: RouteConfig<T>[]): RouteConfig<T> | undefined {
+  static findRoute<T extends HTMLElement>(path: string, routes: RouteConfig<T>[]): RouteConfig<T> | undefined {
     // Phase 1: Exact Match Phase
     const exactMatch = routes.find(route => route.path === path);
     if (exactMatch) return exactMatch;
@@ -136,7 +136,7 @@ export class RouterUtils {
    * @param config - The configuration object containing the path, routes, options, and router instance.
    * @returns void
    */
-  static render<T extends BaseElement>(config: RenderConfig<T>): void {
+  static render<T extends HTMLElement>(config: RenderConfig<T>): void {
     const {path, routes, options} = config;
     const router = config.router as RouterService<T>;
     if (path === '/error') {
@@ -183,7 +183,7 @@ export class RouterUtils {
    * @param options - Optional navigation options.
    * @returns void
    */
-  static route(router: RouterService<BaseElement>, path: string, options?: NavigationOption) {
+  static route(router: RouterService<HTMLElement>, path: string, options?: NavigationOption) {
     // Normalize the path to ensure it starts with a slash
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
