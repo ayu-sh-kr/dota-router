@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.10
+
+### Patch Changes
+
+- fc13462: fix type issue down stream
+
 ## 0.0.9
 
 ### Patch Changes
