@@ -1,12 +1,10 @@
-import {BaseElement} from "@ayu-sh-kr/dota-core";
-
 /**
  * RouterService interface defines the methods that a router service should implement.
  * It includes an init method to initialize the router and a render method to render the appropriate component based on the current path.
  *
  * @template T - The type of the component that the router will render.
  */
-export interface RouterService<T extends BaseElement> {
+export interface RouterService<T extends HTMLElement> {
 
   readonly routes: RouteConfig<T>[];
   readonly errorRoute: RouteConfig<T>;
@@ -23,7 +21,7 @@ export interface RouterService<T extends BaseElement> {
   init(): void;
 }
 
-export type RouteConfig<T extends BaseElement> = {
+export type RouteConfig<T extends HTMLElement> = {
   path: string;
   component: new () => T;
   default?: boolean;
@@ -35,7 +33,7 @@ export type NavigationOption = {
   [key: string]: string;
 }
 
-export type RenderConfig<T extends BaseElement> = {
+export type RenderConfig<T extends HTMLElement> = {
   path: string;
   routes: RouteConfig<T>[];
   options?: NavigationOption;
