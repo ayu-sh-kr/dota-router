@@ -1,5 +1,3 @@
-Here's a comprehensive README.md for your navigation router project:
-
 # Dota Navigation Router
 
 A lightweight TypeScript router for web applications that leverages the Navigation API for seamless client-side routing.
