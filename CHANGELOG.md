@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.11
+
+### Patch Changes
+
+- c2a5786: Create a common interface to init routers, simplify configuration and initialization
+
 ## 0.0.10
 
 ### Patch Changes
