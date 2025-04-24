@@ -1,15 +1,18 @@
-import {BaseElement} from "@ayu-sh-kr/dota-core";
-import {NavigationOption, RouteConfig, RouterService} from "@dota/Types";
+import {NavigationOption, RouteConfig, Router} from "@dota/Types";
 import {RouterUtils} from "@dota/RouterUtils";
 
-export class DomHistoryRouter<T extends BaseElement> implements RouterService<T>{
+export class DomHistoryRouter<T extends HTMLElement> implements Router<T>{
 
-  readonly defaultRoute: RouteConfig<T>;
-  readonly errorRoute: RouteConfig<T>;
   readonly routes: RouteConfig<T>[];
+  readonly errorRoute: RouteConfig<T>;
+  readonly defaultRoute: RouteConfig<T>;
 
 
-  constructor(defaultRoute: RouteConfig<T>, errorRoute: RouteConfig<T>, routes: RouteConfig<T>[]) {
+  constructor(
+    routes: RouteConfig<T>[],
+    errorRoute: RouteConfig<T>,
+    defaultRoute: RouteConfig<T>,
+  ) {
     this.defaultRoute = defaultRoute;
     this.errorRoute = errorRoute;
     this.routes = routes;
@@ -58,6 +61,7 @@ export class DomHistoryRouter<T extends BaseElement> implements RouterService<T>
     };
 
     window.history.pushState(null, '', navigationDestination.url);
+    window.dispatchEvent(new PopStateEvent('popstate', {state: null}));
   }
 
 }
