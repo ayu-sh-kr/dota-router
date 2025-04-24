@@ -1,7 +1,7 @@
 import {describe, it, expect, beforeEach, vi, afterEach} from 'vitest';
 import {RouterUtils} from '@dota/RouterUtils';
 import {BaseElement} from '@ayu-sh-kr/dota-core';
-import {RouteConfig, RouterService, RenderConfig} from '@dota/Types';
+import {RouteConfig, Router, RenderConfig} from '@dota/Types';
 import 'reflect-metadata';
 import {resetNavigationEntries} from "@test/setup/MockNavigationUtility";
 
@@ -59,7 +59,7 @@ describe('RouterUtils render method', () => {
     ];
 
     // Create mock router
-    const router: RouterService<BaseElement> = {
+    const router: Router<BaseElement> = {
       routes,
       errorRoute: {
         path: '/error',
@@ -91,7 +91,7 @@ describe('RouterUtils render method', () => {
     });
 
     // Create mock router
-    const router: RouterService<BaseElement> = {
+    const router: Router<BaseElement> = {
       routes: [],
       errorRoute: {
         path: '/error',
@@ -130,7 +130,7 @@ describe('RouterUtils render method', () => {
     ];
 
     // Create mock router
-    const router: RouterService<BaseElement> = {
+    const router: Router<BaseElement> = {
       routes,
       errorRoute: {
         path: '/error',

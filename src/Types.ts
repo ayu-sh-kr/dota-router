@@ -4,7 +4,7 @@
  *
  * @template T - The type of the component that the router will render.
  */
-export interface RouterService<T extends HTMLElement> {
+export interface Router<T extends HTMLElement> {
 
   readonly routes: RouteConfig<T>[];
   readonly errorRoute: RouteConfig<T>;
@@ -37,5 +37,25 @@ export type RenderConfig<T extends HTMLElement> = {
   path: string;
   routes: RouteConfig<T>[];
   options?: NavigationOption;
-  router: RouterService<T>;
+  router: Router<T>;
+}
+
+
+export interface DefaultRouterConfig<T extends Router<HTMLElement>> {
+  routes: RouteConfig<HTMLElement>[];
+  errorRoute: RouteConfig<HTMLElement>;
+  defaultRoute: RouteConfig<HTMLElement>;
+  router: new (...args: any[]) => T;
+}
+
+
+export interface RouterService<T extends Router<HTMLElement>> {
+  _router: new (...args: any[]) => T;
+  _routes: RouteConfig<HTMLElement>[];
+  _errorRoute: RouteConfig<HTMLElement>;
+  _defaultRoute: RouteConfig<HTMLElement>;
+
+  init(): RouterService<T>;
+
+  route(path: string): void;
 }

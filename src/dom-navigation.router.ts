@@ -1,7 +1,7 @@
-import {NavigationOption, RouteConfig, RouterService} from "@dota/Types";
+import {NavigationOption, RouteConfig, Router} from "@dota/Types";
 import {RouterUtils} from "@dota/RouterUtils";
 
-export class DomNavigationRouter<T extends HTMLElement> implements RouterService<T> {
+export class DomNavigationRouter<T extends HTMLElement> implements Router<T> {
 
   public readonly routes: RouteConfig<T>[]
   public readonly errorRoute: RouteConfig<T>;
