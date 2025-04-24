@@ -1,4 +1,4 @@
-import {NavigationOption, RenderConfig, RouteConfig, RouterService} from "@dota/Types";
+import {NavigationOption, RenderConfig, RouteConfig, Router} from "@dota/Types";
 import {ComponentConfig} from "@ayu-sh-kr/dota-core";
 import 'reflect-metadata';
 import {DomNavigationRouter} from "@dota/dom-navigation.router";
@@ -30,12 +30,7 @@ export class RouterUtils {
    * @returns The current path as a string or an empty string if not found.
    */
   static getCurrentPath(): string {
-    const navigation = window.navigation;
-    const entries = navigation.entries();
-    if (entries.length > 0) {
-      return new URL(entries[entries.length - 1].url || '').pathname;
-    }
-    return '';
+    return window.location.pathname;
   }
 
   /**
@@ -138,7 +133,7 @@ export class RouterUtils {
    */
   static render<T extends HTMLElement>(config: RenderConfig<T>): void {
     const {path, routes, options} = config;
-    const router = config.router as RouterService<T>;
+    const router = config.router as Router<T>;
     if (path === '/error') {
       if (Reflect.hasOwnMetadata('Component', router.errorRoute.component)) {
         const config: ComponentConfig = Reflect.getOwnMetadata('Component', router.errorRoute.component);
@@ -183,7 +178,7 @@ export class RouterUtils {
    * @param options - Optional navigation options.
    * @returns void
    */
-  static route(router: RouterService<HTMLElement>, path: string, options?: NavigationOption) {
+  static route(router: Router<HTMLElement>, path: string, options?: NavigationOption) {
     // Normalize the path to ensure it starts with a slash
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
