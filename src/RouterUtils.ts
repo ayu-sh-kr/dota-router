@@ -137,9 +137,8 @@ export class RouterUtils {
     if (path === '/error') {
       if (Reflect.hasOwnMetadata('Component', router.errorRoute.component)) {
         const config: ComponentConfig = Reflect.getOwnMetadata('Component', router.errorRoute.component);
-        const previousPath = RouterUtils.getPreviousPath();
         document.querySelector('#app-root')!.innerHTML = `
-            <${config.selector} path="${previousPath}" message="${options?.message || 'Path not found'}"></${config.selector}>
+            <${config.selector} message="${options?.message || 'Path not found'}"></${config.selector}>
         `;
         return;
       }
@@ -154,7 +153,6 @@ export class RouterUtils {
     }
 
     if (route.render) {
-      console.info(`Rendering route with custom render function for path: ${path}`);
       route.render(path);
       return;
     }
