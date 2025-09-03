@@ -44,6 +44,15 @@ export class DotaRouterService<T extends Router<HTMLElement>> implements RouterS
     )
   }
 
+  /**
+   * Requires a router instance and a list of components to create a RouterService instance.
+   * The components are processed to generate the routing configuration.
+   *
+   * This method is a factory method that helps create a RouterService instance.
+   * @param config - The configuration object containing the router instance and its components.
+   * @throws Error if components are not provided in the configuration.
+   * @returns A RouterService instance.
+   */
   static fromComponents<T extends Router<HTMLElement>>(config: DefaultRouterConfig<T>): RouterService<T> {
     if (!config.components) throw Error('Elements are required to create a RouterService instance');
     const routes = RouterUtils.prepareConfig(config.components);
