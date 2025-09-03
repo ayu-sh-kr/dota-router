@@ -1,5 +1,11 @@
 # @ayu-sh-kr/dota-router
 
+## 0.0.13
+
+### Patch Changes
+
+- 2f408b6: added feature to enable routing via decorators and components
+
 ## 0.0.12
 
 ### Patch Changes
