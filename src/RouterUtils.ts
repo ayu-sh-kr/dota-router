@@ -1,4 +1,4 @@
-import {NavigationOption, RenderConfig, RouteConfig, Router} from "@dota/Types";
+import {ComponentClass, NavigationOption, RenderConfig, RouteConfig, Router} from "@dota/Types";
 import {ComponentConfig} from "@ayu-sh-kr/dota-core";
 import 'reflect-metadata';
 import {DomNavigationRouter} from "@dota/dom-navigation.router";
@@ -47,29 +47,59 @@ export class RouterUtils {
   }
 
   /**
+   * Get the parent path from the given path and route configuration.
+   * This method extracts the parent path from the given path based on the route configuration.
+   * It splits the path into segments and removes the last segment to get the parent path.
+   *
+   * @param path - The path to extract the parent path from.
+   * @returns The parent path as a string or '/' if not found.
+   */
+  static getParentPath(path: string) {
+    const segments = path.split('/').filter(segment => segment.length > 0);
+    if (segments.length <= 1) {
+      return '/';
+    }
+    segments.pop(); // Remove the last segment to get the parent path
+    return '/' + segments.join('/');
+  }
+
+  /**
+   * Check if the given path is a parent path (i.e., has no child segments).
+   * This method checks if the given path is a parent path by splitting it into segments
+   * and checking if there is only one or no segments.
+   *
+   * @param path - The path to check.
+   * @returns True if the path is a parent path, false otherwise.
+   */
+  static isParent(path: string) {
+    const segments = path.split('/').filter(segment => segment.length > 0);
+    return segments.length <= 1;
+  }
+
+  /**
    * Finds the most appropriate route configuration for a given path in a routing hierarchy.
-   * 
+   *
    * @template T - Type parameter extending BaseElement to ensure type safety with route components
    * @param path - The URL path to find a route for (e.g., "/users/profile")
    * @param routes - Array of route configurations to search through
    * @returns The matching RouteConfig or undefined if no match is found
-   * 
+   *
    * @algorithm
    * 1. Exact Match Phase:
    *    - First attempts to find a route with a path exactly matching the requested path
    *    - If an exact match is found: return it
-   * 
+   *
    * 2. Prefix Match Phase (only executed if no exact match was found):
    *    - For each route configuration:
-   *      a. Check if the request path starts with the route's path 
+   *      a. Check if the request path starts with the route's path
    *      b. For routes with children:
    *         - If route has a render function, return it immediately
-   *         - Calculate the remaining child path by removing the parent path 
+   *         - Calculate the remaining child path by removing the parent path
    *         - Recursively search for a matching child route
    *         - Return matching child route if found, otherwise return the parent route
-   * 
+   *
    * 3. Return undefined if no matches are found
-   * 
+   *
    * @example
    * With routes configuration:
    * [
@@ -79,13 +109,13 @@ export class RouterUtils {
    *     { path: "/users/settings", component: SettingsComponent }
    *   ]}
    * ]
-   * 
+   *
    * // Simple exact match
    * findRoute("/dashboard", routes) -> Returns DashboardComponent route
-   * 
+   *
    * // Child route exact match
    * findRoute("/users/profile", routes) -> Returns ProfileComponent route
-   * 
+   *
    * // Non-existent path with valid parent prefix
    * findRoute("/users/unknown", routes) -> May return UsersComponent as fallback
    */
@@ -102,22 +132,22 @@ export class RouterUtils {
         if (route.render) {
           return route;
         }
-        
+
         // Calculate the remaining path after removing the parent path
         const childPath = RouterUtils.getChildPath(path, route);
-        
+
         // Recursively search for a matching child route
         const childRoute = RouterUtils.findRoute(childPath, route.children);
-        
+
         // Return the child route if found, otherwise fall back to the parent route
         if (childRoute) {
           return childRoute;
         }
-        
+
         return route;
       }
     }
-    
+
     // If no match found in either phase, return undefined
     return undefined;
   }
@@ -188,5 +218,48 @@ export class RouterUtils {
     } else {
       console.error(`Unsupported router type`);
     }
+  }
+
+  /**
+   * Prepare a hierarchical route configuration from a flat array of component classes.
+   * This method takes an array of component classes and extracts their route configurations
+   * using metadata. It then builds a hierarchical structure of routes based on their paths.
+   * The resulting array contains only the top-level routes, with their children nested appropriately.
+   * This allows for easy management of nested routes in a routing system.
+   *
+   *
+   * @param elements - An array of component classes to extract route configurations from.
+   * @returns An array of top-level route configurations with nested children.
+   */
+  static prepareConfig(elements: ComponentClass<HTMLElement>[]): RouteConfig<HTMLElement>[] {
+    const routes: RouteConfig<HTMLElement>[] = [];
+    const routeMap: Map<string, RouteConfig<HTMLElement>> = new Map();
+
+    // Step 1 - Extract all the routes
+    for (const element of elements) {
+      if (element && Reflect.hasOwnMetadata('Route', element)) {
+        const config: RouteConfig<HTMLElement> = Reflect.getOwnMetadata('Route', element);
+        routeMap.set(config.path, {...config, children: []});
+      }
+    }
+
+    // Step 2 - Build the hierarchy
+    for (const route of routeMap.values()) {
+      const parentPath = RouterUtils.getParentPath(route.path);
+      if (parentPath !== '/' && routeMap.has(parentPath)) {
+        const parentRoute = routeMap.get(parentPath)!;
+        parentRoute.children = parentRoute.children || [];
+        parentRoute.children.push(route);
+      } else {
+        routes.push(route);
+      }
+    }
+
+    // Step 3 - Return the top-level routes
+    if (routes.length > 0) {
+      return routes;
+    }
+
+    return [];
   }
 }
