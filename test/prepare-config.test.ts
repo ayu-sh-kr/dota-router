@@ -4,7 +4,6 @@ import {ComponentClass} from '@dota/Types';
 import { RouterUtils } from '@dota/RouterUtils';
 import { Route } from '@dota/route.decorator';
 import 'reflect-metadata';
-import {HTMLElement} from "happy-dom";
 
 // Mock components for testing
 class HomePage extends BaseElement {
