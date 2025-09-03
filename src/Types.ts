@@ -23,7 +23,7 @@ export interface Router<T extends HTMLElement> {
 
 export type RouteConfig<T extends HTMLElement> = {
   path: string;
-  component: new () => T;
+  component: ComponentClass<T>;
   default?: boolean;
   children?: RouteConfig<T>[];
   render?: (path: string) => void;
@@ -42,10 +42,11 @@ export type RenderConfig<T extends HTMLElement> = {
 
 
 export interface DefaultRouterConfig<T extends Router<HTMLElement>> {
-  routes: RouteConfig<HTMLElement>[];
+  routes?: RouteConfig<HTMLElement>[];
   errorRoute: RouteConfig<HTMLElement>;
   defaultRoute: RouteConfig<HTMLElement>;
   router: new (...args: any[]) => T;
+  components?: ComponentClass<HTMLElement>[];
 }
 
 
@@ -59,3 +60,5 @@ export interface RouterService<T extends Router<HTMLElement>> {
 
   route(path: string): void;
 }
+
+export type ComponentClass<T> = new (...args: any[]) => T;
